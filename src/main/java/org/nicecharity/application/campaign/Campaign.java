@@ -1,28 +1,20 @@
 package org.nicecharity.application.campaign;
 
 import java.math.BigDecimal;
-import java.sql.Date;
-import java.time.LocalDate;
-import java.util.List;
+import java.time.LocalDateTime;
 
 import org.nicecharity.application.user.User;
-import org.nicecharity.application.withdrawal.Withdrawal;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -36,53 +28,57 @@ import lombok.Setter;
 @Table(name = "campaigns")
 public class Campaign {
 
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long campaignId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id",nullable = false)
+    private User user;
 
     @Column(nullable = false)
-    private String name;
+    private String title;
 
-    @Column(nullable = false)
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String description;
 
     @Column(nullable = false)
-    @Temporal(TemporalType.DATE)  
-    private Date startDate;
+    private BigDecimal targetAmount;
 
     @Column(nullable = false)
-    @Temporal(TemporalType.DATE)  
-    private Date endDate;
+    private LocalDateTime startDate;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "creator_id")
-    private User creator;  // Assuming a User entity exists
+    @Column(nullable = false)
+    private LocalDateTime endDate;
 
-    @Enumerated(EnumType.STRING)
-    private CampaignStatus status;  // Enum for campaign status (e.g., DRAFT, ACTIVE, COMPLETED)
+    // @ManyToOne(fetch = FetchType.LAZY)
+    // @JoinColumn(name = "creator_id")
+    // private User creator;  
 
-    private BigDecimal targetBudget;
+    @Column(length=255)
+    private String imageUrl;
 
-    @OneToMany(mappedBy = "campaign", cascade = CascadeType.ALL)  // OneToMany relationship with optional cascade
-    private List<Withdrawal> withdrawalRequests;  // Assuming a WithdrawalRequest entity exists
+    @Column(nullable = false)
+    private BigDecimal currentAmount;
+ 
 
-
-    public boolean isActive() {
-        return status == CampaignStatus.ACTIVE && startDate.before(new Date(System.currentTimeMillis())) && endDate.after(new Date(System.currentTimeMillis()));
-    }
+ 
 
 
-    public void addDonation(BigDecimal amount) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'addDonation'");
-    }
+    // public boolean isActive() {
+    //     return status == CampaignStatus.ACTIVE && startDate.before(new Date(System.currentTimeMillis())) && endDate.after(new Date(System.currentTimeMillis()));
+    // }
+
+
+   
     
 }
 
-enum CampaignStatus {
-    DRAFT,
-    ACTIVE,
-    COMPLETED,
-    CANCELLED
-}
+// enum CampaignStatus {
+//     DRAFT,
+//     ACTIVE,
+//     COMPLETED,
+//     CANCELLED
+// }
 

@@ -3,15 +3,29 @@ package org.nicecharity.application.withdrawal;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import org.nicecharity.application.campaign.Campaign;
+import org.nicecharity.application.user.User;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 @Entity
 @Table(name = "withdrawals")
 public class Withdrawal {
@@ -20,8 +34,11 @@ public class Withdrawal {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long withdrawalId;
 
-    @Column(name = "campaign_id")
-    private Long campaignId;
+ @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "campaign_id",nullable = false)
+    private Campaign campaign;
+
+    
 
     @Column(name = "request_date")
     private LocalDateTime requestDate;
@@ -33,17 +50,9 @@ public class Withdrawal {
     @Column(name = "status")
     private WithdrawalStatus status;
 
-    // Getters and setters (omitted for brevity)
 
-    public Withdrawal(Long campaignId, LocalDateTime requestDate, BigDecimal requestAmount, WithdrawalStatus status) {
-        this.campaignId = campaignId;
-        this.requestDate = requestDate;
-        this.requestAmount = requestAmount;
-        this.status = status;
-    }
 
-    public Withdrawal() {
-    }
+   
 }
 
 enum WithdrawalStatus {

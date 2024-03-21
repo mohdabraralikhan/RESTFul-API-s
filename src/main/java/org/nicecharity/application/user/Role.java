@@ -1,13 +1,19 @@
 package org.nicecharity.application.user;
 
-public enum Role {
-    USER("user"),
-    CAMPAIGN_CREATOR("campaign_creator");
-    private final String role;
-    Role(String role){
-        this.role = role;
+import org.springframework.security.core.GrantedAuthority;
+
+public enum Role implements GrantedAuthority {
+    USER("ROLE_USER"),
+    CAMPAIGN_CREATOR("ROLE_CAMPAIGN_CREATOR");
+
+    private final String authority;
+
+    Role(String authority) {
+        this.authority = authority;
     }
-    public String getRole(){
-        return role;
+
+    @Override
+    public String getAuthority() {
+        return authority;
     }
 }
