@@ -14,7 +14,7 @@ public class MyUserDetailsService implements UserDetailsService {
     private UserRepository userRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
-MyUserDetailsService(UserRepository userRepository,PasswordEncoder passwordEncoder){
+    MyUserDetailsService(UserRepository userRepository,PasswordEncoder passwordEncoder){
     this.userRepository = userRepository;
     this.passwordEncoder = passwordEncoder;
 }
